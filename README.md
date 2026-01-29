@@ -16,6 +16,7 @@ A static real estate (bienes raíces) website built with vanilla HTML, SCSS, and
 - [Features](#features)
 - [Pages](#pages)
 - [Conventions & Best Practices](#conventions--best-practices)
+- [Contributing](#contributing)
 
 ---
 
@@ -178,6 +179,20 @@ HTML files reference:
 4. **Scripts**: Add or edit files in `src/js/`; they are concatenated and minified into `build/js/bundle.min.js`.
 5. **HTML**: Keep shared structure (header, footer, nav) in sync across pages; consider a simple include/template step if the project grows.
 6. **Accessibility**: Use semantic HTML, `alt` on images, and ensure interactive elements (e.g. dark mode toggle, mobile menu) are keyboard-friendly.
+
+---
+
+## Contributing
+
+Pull requests are welcome. When opening a PR, please use the [pull request template](.github/PULL_REQUEST_TEMPLATE.md):
+
+1. **Description** — Summarize your changes and link the related issue (bullet points preferred).
+2. **Ticket link** — Add the issue/ticket URL if it applies.
+3. **Type of change** — Check one: New feature, Hot Fix, Bug fix, or Documentation update.
+4. **Checklist** — Confirm your code follows the project style, you’ve self-reviewed, and that docs/tests are updated as needed.
+5. **Screenshots** — For UI changes, add desktop and mobile screenshots if relevant.
+
+The **Build Assets** workflow runs on push to `main` when `src/`, `package.json`, `pnpm-lock.yaml`, or `gulpfile.js` change. Ensure `pnpm run build` passes locally before pushing.
 
 ---
 
