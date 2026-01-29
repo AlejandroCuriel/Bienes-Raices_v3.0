@@ -79,4 +79,7 @@ export function dev() {
     watch('src/img/**/*.{png,jpg}', imagenes)
 }
 
+/** One-shot build for CI (no watch). Use: gulp build */
+export const build = series( js, css, imagenes )
+
 export default series( js, css, imagenes, dev )
