@@ -1,24 +1,27 @@
-name: Build Assets
+name: Build Assets CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main, dev ]
     paths:
       - 'src/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'gulpfile.js'
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  gulp-build:
+  build:
+    name: Gulp Build (Node 20)
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
         with:
           version: 9
 
@@ -29,10 +32,13 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm ci
+        # --frozen-lockfile ensures the build is consistent with your pnpm-lock.yaml
+        run: pnpm install --frozen-lockfile
 
-      - name: Build assets (JS, CSS, images)
+      - name: Run Gulp build task
+        # Executes the specific 'build' task we created in your gulpfile
         run: pnpm exec gulp build
 
-      - name: Verify build output
-        run: ls -laR ./build
+      - name: Verify generated assets
+        # Useful for debugging; shows the output of your build in the logs
+        run: ls -R ./build
