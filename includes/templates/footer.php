@@ -7,8 +7,7 @@
       <a href="contacto.php">Contacto</a>
     </nav>
   </div>
-
-  <p class="copyright">Todos los derechos Reservados 2026 &copy;</p>
+  <p class="copyright">Todos los derechos Reservados <?= date('Y') ?> &copy;</p>
 </footer>
 
 <script src="build/js/bundle.min.js"></script>
