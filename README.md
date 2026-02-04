@@ -44,14 +44,14 @@ This is a multi-page real estate showcase site with a responsive layout, dark mo
 
 ```
 bienesRaices/
-├── index.html          # Home
-├── anuncios.html       # Listings
-├── anuncio.html        # Single listing
-├── blog.html           # Blog index
-├── entrada.html        # Blog post
-├── nosotros.html       # About
-├── contacto.html       # Contact
-├── base.html           # Base layout reference
+├── index.php          # Home
+├── anuncios.php       # Listings
+├── anuncio.php        # Single listing
+├── blog.php           # Blog index
+├── entrada.php        # Blog post
+├── nosotros.php       # About
+├── contacto.php       # Contact
+├── base.php           # Base layout reference
 ├── gulpfile.js         # Gulp tasks (CSS, JS, images, watch)
 ├── package.json
 ├── pnpm-lock.yaml
@@ -125,7 +125,7 @@ This will:
 - Process images from `src/img/` → `build/img/` (JPEG + WebP + AVIF; SVGs copied as-is)
 - Watch `src/scss`, `src/js`, and `src/img` for changes and re-run the relevant tasks
 
-Serve the project with any static server (e.g. XAMPP, Live Server, or `npx serve .`) and open the root or `index.html`.
+Serve the project with any static server (e.g. XAMPP, Live Server, or `npx serve .`) and open the root or `index.php`.
 
 ---
 
@@ -160,14 +160,14 @@ HTML files reference:
 
 | File           | Purpose                    |
 |----------------|----------------------------|
-| `index.html`   | Home: hero, features, listings preview, CTA |
-| `anuncios.html`| All property listings      |
-| `anuncio.html` | Single property detail     |
-| `nosotros.html`| About us                   |
-| `blog.html`    | Blog listing               |
-| `entrada.html` | Single blog post           |
-| `contacto.html`| Contact form               |
-| `base.html`    | Base layout template       |
+| `index.php`   | Home: hero, features, listings preview, CTA |
+| `anuncios.php`| All property listings      |
+| `anuncio.php` | Single property detail     |
+| `nosotros.php`| About us                   |
+| `blog.php`    | Blog listing               |
+| `entrada.php` | Single blog post           |
+| `contacto.php`| Contact form               |
+| `base.php`    | Base layout template       |
 
 ---
 
