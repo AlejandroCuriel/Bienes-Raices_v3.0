@@ -24,17 +24,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # ✅ PNPM PRIMERO
+      - name: Install pnpm ${{ env.PNPM_VERSION }}
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      # ✅ NODE DESPUÉS (usa cache pnpm correctamente)
       - name: Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
-
-      - name: Install pnpm ${{ env.PNPM_VERSION }}
-        uses: pnpm/action-setup@v3
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -49,4 +51,9 @@ jobs:
             exit 1
           fi
 
-          if [ -z "$(ls -A build]()
+          if [ -z "$(ls -A build)" ]; then
+            echo "❌ build directory is empty"
+            exit 1
+          fi
+
+          echo "✅ Build output verified"
