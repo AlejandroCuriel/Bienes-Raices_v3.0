@@ -1,6 +1,6 @@
 <?php
 require 'includes/funciones.php';
-incluirTemplate('header');
+incluirTemplate('header', true);
 ?>
 
 <main class="contenedor seccion">
