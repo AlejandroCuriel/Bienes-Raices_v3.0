@@ -3,17 +3,9 @@ name: Build Assets CI
 on:
   push:
     branches: [ main, dev ]
-    paths:
-      - 'src/**'
-      - 'pnpm-lock.yaml'
-      - 'gulpfile.js'
 
   pull_request:
     branches: [ main, dev ]
-    paths:
-      - 'src/**'
-      - 'pnpm-lock.yaml'
-      - 'gulpfile.js'
 
 concurrency:
   group: ci-${{ github.ref }}
