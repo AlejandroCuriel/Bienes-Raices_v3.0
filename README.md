@@ -60,8 +60,6 @@ bienesRaices/
 ├── includes/
 │   ├── app.php         # Path constants (TEMPLATES_URL, etc.)
 │   ├── funciones.php   # Helpers (e.g. incluirTemplate)
-│   ├── config/
-│   │   └── database.php
 │   └── templates/
 │       ├── header.php  # Shared header + nav
 │       └── footer.php  # Shared footer
