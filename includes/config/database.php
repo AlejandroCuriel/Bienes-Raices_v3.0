@@ -1,0 +1,11 @@
+<?php
+
+function conectarBDD(): mysqli
+{
+  $db = mysqli_connect('localhost', 'root', 'root', 'bienesraices_crud');
+  if (!$db) {
+    echo "No se pudo conectar";
+    exit;
+  }
+  return $db;
+}
