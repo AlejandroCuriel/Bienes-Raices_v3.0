@@ -25,7 +25,7 @@ incluirTemplate('header');
       echo "<p class='alerta exito'>Propiedad creada correctamente</p>";
       break;
     case 2:
-      echo "<p class='alerta exito'>Propiedad creada correctamente</p>";
+      echo "<p class='alerta exito'>Propiedad Actualizada correctamente</p>";
       break;
     case 3:
       echo "<p class='alerta exito'>Propiedad creada correctamente</p>";
