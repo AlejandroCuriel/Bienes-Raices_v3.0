@@ -1,7 +1,13 @@
 <?php
+require '../includes/config/database.php';
+require '../includes/funciones.php';
+
+$auth = estaAutenticado();
+if (!$auth) {
+  header('Location: /');
+}
 // Obtener las propiedades existentes
 // 1.- Importar la conexión
-require '../includes/config/database.php';
 $db = conectarBDD();
 
 // 2.- Escribir el Query
@@ -31,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 // Incluye un template
-require '../includes/funciones.php';
 incluirTemplate('header');
 ?>
 
@@ -72,7 +77,7 @@ incluirTemplate('header');
             <td><img src="/imagenes/<?php echo $propiedad['imagen']; ?>" class="imagen-tabla" /></td>
             <td><?= $propiedad['precio'] ?></td>
             <td>
-              <a href="admin/propiedades/actualizar.php?id=<?= $propiedad['id'] ?>" class="boton-amarillo-block">Actualizar</a>
+              <a href="propiedades/actualizar.php?id=<?= $propiedad['id'] ?>" class="boton-amarillo-block">Actualizar</a>
 
               <form method="POST" class="w-100">
                 <input type="hidden" name="id" value="<?= $propiedad['id'] ?>" />
