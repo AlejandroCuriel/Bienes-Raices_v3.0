@@ -1,6 +1,13 @@
 <?php
-// Conectar Base de Datos
 require '../../includes/config/database.php';
+require '../../includes/funciones.php';
+
+$auth = estaAutenticado();
+if (!$auth) {
+  header('Location: /');
+}
+
+// Conectar Base de Datos
 $db = conectarBDD();
 
 // Obtener vendedores
@@ -107,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-require '../../includes/funciones.php';
 incluirTemplate('header');
 ?>
 
