@@ -1,4 +1,12 @@
 <?php
+require '../../includes/config/database.php';
+require '../../includes/funciones.php';
+
+$auth = estaAutenticado();
+if (!$auth) {
+  header('Location: /');
+}
+
 // Validar que sea un ID válido
 $id = $_GET['id'];
 $id = filter_var($id, FILTER_VALIDATE_INT);
@@ -8,7 +16,6 @@ if (!$id) {
 }
 
 // Conectar Base de Datos
-require '../../includes/config/database.php';
 $db = conectarBDD();
 
 // Obtener información de la propiedad
@@ -130,7 +137,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-require '../../includes/funciones.php';
 incluirTemplate('header');
 ?>
 
