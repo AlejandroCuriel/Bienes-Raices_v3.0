@@ -1,0 +1,60 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: bienesraices-web
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: bienesraices
+      DB_USER: bienesraices
+      DB_PASS: bienesraices
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+
+  db:
+    image: mysql:8.4
+    container_name: bienesraices-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: bienesraices
+      MYSQL_USER: bienesraices
+      MYSQL_PASSWORD: bienesraices
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  node:
+    image: node:22-alpine
+    container_name: bienesraices-node
+    working_dir: /app
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      PNPM_HOME: /pnpm
+      PATH: /pnpm:$PATH
+    volumes:
+      - ./:/app
+      - pnpm_store:/pnpm/store
+    command: >
+      sh -c "corepack enable
+      && pnpm config set store-dir /pnpm/store
+      && pnpm install
+      && pnpm run dev"
+
+volumes:
+  db_data:
+  pnpm_store:
