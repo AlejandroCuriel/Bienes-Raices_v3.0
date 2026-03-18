@@ -1,5 +1,5 @@
 name: Build Assets CI
-
+run-name: "Build Assets CI - ${{ github.ref }}"
 on:
   push:
     branches: [ main, dev ]
@@ -22,17 +22,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98 #v6: 6.0.2
 
       # ✅ PNPM PRIMERO
       - name: Install pnpm ${{ env.PNPM_VERSION }}
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 #v5 #5.0.0
         with:
           version: ${{ env.PNPM_VERSION }}
 
       # ✅ NODE DESPUÉS (usa cache pnpm correctamente)
       - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f #v6 #6.3.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
