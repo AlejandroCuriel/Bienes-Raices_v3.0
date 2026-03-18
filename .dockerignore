@@ -3,5 +3,10 @@
 node_modules
 pnpm-store
 npm-debug.log
+.env
+.env.*
 Dockerfile*
+dockerfile*
+dockerfile
 docker-compose*
+.DS_Store
