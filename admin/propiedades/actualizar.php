@@ -1,6 +1,5 @@
 <?php
-require '../../includes/config/database.php';
-require '../../includes/funciones.php';
+require_once '../../includes/app.php';
 
 $auth = estaAutenticado();
 if (!$auth) {

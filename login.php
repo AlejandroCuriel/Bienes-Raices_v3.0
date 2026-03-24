@@ -1,6 +1,5 @@
 <?php
-require 'includes/funciones.php';
-require 'includes/config/database.php';
+require_once 'includes/config/app.php';
 $db = conectarBDD();
 
 // Autenticar al usuario

@@ -1,5 +1,5 @@
 <?php
-require 'includes/funciones.php';
+require_once 'includes/app.php';
 incluirTemplate('header', true);
 ?>
 
@@ -30,7 +30,7 @@ incluirTemplate('header', true);
 
   <?php
   $limit = 3;
-  include 'includes/templates/anuncios.php'
+  include_once 'includes/templates/anuncios.php'
   ?>
 
   <div class="alinear-derecha">
