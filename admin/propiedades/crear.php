@@ -1,10 +1,11 @@
 <?php
 require_once '../../includes/app.php';
 
-$auth = estaAutenticado();
-if (!$auth) {
-  header('Location: /');
-}
+use App\Propiedad;
+
+
+
+estaAutenticado();
 
 // Conectar Base de Datos
 $db = conectarBDD();
@@ -24,13 +25,9 @@ $estacionamiento = "";
 $vendedorId = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // echo "<pre>";
-  // var_dump($_POST);
-  // echo "</pre>";
 
-  echo "<pre>";
-  var_dump($_FILES);
-  echo "</pre>";
+  $propiedad = new Propiedad($_POST);
+  $propiedad->guardar();
 
   $titulo = mysqli_real_escape_string($db,  $_POST['titulo']);
   $precio = mysqli_real_escape_string($db,  $_POST['precio']);
@@ -101,9 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Subir la imagen
     move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
 
-    // Insertar en la base de datos la propiedad
-    $query = "INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId) VALUES ('$titulo','$precio', '$nombreImagen' ,'$descripcion','$habitaciones','$wc','$estacionamiento', '$creado', '$vendedorId')";
-
     $resultado = mysqli_query($db, $query);
 
     if ($resultado) {
@@ -157,7 +151,7 @@ incluirTemplate('header');
     <fieldset>
       <legend>Vendedor</legend>
 
-      <select name="vendedor">
+      <select name="vendedorId">
         <option value="">-- Seleccione --</option>
         <?php while ($vendedor = mysqli_fetch_assoc($resultado)): ?>
           <option <?php echo $vendedorId === $vendedor['id'] ? 'selected' : '' ?> value='<?php echo $vendedor['id'] ?>'>
