@@ -1,10 +1,8 @@
 <?php
 require_once '../includes/app.php';
 
-$auth = estaAutenticado();
-if (!$auth) {
-  header('Location: /');
-}
+estaAutenticado();
+
 // Obtener las propiedades existentes
 // 1.- Importar la conexión
 $db = conectarBDD();
