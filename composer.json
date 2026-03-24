@@ -1,0 +1,17 @@
+{
+  "name": "alex/bienes-raices",
+  "description": "Creando un proyecto con POO",
+  "type": "project",
+  "authors": [
+    {
+      "name": "Alejandro Curiel",
+      "email": "alex_curielg@hotmail.com"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "App\\": "./classes"
+    }
+  }
+}
