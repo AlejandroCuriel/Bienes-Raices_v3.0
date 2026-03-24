@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/config/app.php';
+require_once 'includes/app.php';
 $db = conectarBDD();
 
 // Autenticar al usuario
