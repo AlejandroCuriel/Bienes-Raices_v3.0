@@ -50,7 +50,7 @@ incluirTemplate('header');
   } ?>
 
   <a href="/admin/propiedades/crear.php" class="boton boton-verde">Nuega Propiedad</a>
-  <?php if (mysqli_num_rows($resultadoPropiedades) > 0) : ?>
+  <?php if (count($propiedades) > 0) : ?>
     <table class="propiedades">
       <thead>
         <tr>
@@ -62,22 +62,22 @@ incluirTemplate('header');
         </tr>
       </thead>
       <tbody>
-        <?php while ($propiedad = mysqli_fetch_assoc($resultadoPropiedades)): ?>
+        <?php foreach ($propiedades as $propiedad) : ?>
           <tr>
-            <td><?= $propiedad['id'] ?></td>
-            <td><?= $propiedad['titulo'] ?></td>
-            <td><img src="/imagenes/<?php echo $propiedad['imagen']; ?>" class="imagen-tabla" /></td>
-            <td><?= $propiedad['precio'] ?></td>
+            <td><?= $propiedad->id ?></td>
+            <td><?= $propiedad->titulo ?></td>
+            <td><img src="/imagenes/<?php echo $propiedad->imagen; ?>" class="imagen-tabla" /></td>
+            <td><?= $propiedad->precio ?></td>
             <td>
-              <a href="propiedades/actualizar.php?id=<?= $propiedad['id'] ?>" class="boton-amarillo-block">Actualizar</a>
+              <a href="propiedades/actualizar.php?id=<?= $propiedad->id ?>" class="boton-amarillo-block">Actualizar</a>
 
               <form method="POST" class="w-100">
-                <input type="hidden" name="id" value="<?= $propiedad['id'] ?>" />
+                <input type="hidden" name="id" value="<?= $propiedad->id ?>" />
                 <input type="submit" class="boton-rojo-block" value="Eliminar" />
               </form>
             </td>
           </tr>
-        <?php endwhile ?>
+        <?php endforeach ?>
       </tbody>
     </table>
   <?php endif ?>
