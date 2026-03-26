@@ -23,7 +23,6 @@ $propiedad = Propiedad::find($id);
 $consulta = 'SELECT * FROM vendedores';
 $resultado = mysqli_query($db, $consulta);
 
-
 $resultado = mysqli_query($db, $consulta);
 
 // Array para los errores
@@ -53,17 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   if (empty($errores)) {
-
-    exit;
-    // Insertar en la base de datos la propiedad
-    $query = "UPDATE propiedades SET titulo = '{$titulo}', precio = '{$precio}', imagen = '{$nombreImagen}', descripcion = '{$descripcion}', habitaciones = {$habitaciones}, wc = {$wc}, estacionamiento = {$estacionamiento}, vendedorId = {$vendedorId} WHERE id = {$id}";
-
-    $resultado = mysqli_query($db, $query);
-
-    if ($resultado) {
-      // Redireccionar al usuario
-      header("Location: /admin?resultado=2");
-    }
+    // Almacenar la imagen
+    $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+    $propiedad->guardar();
   }
 }
 
