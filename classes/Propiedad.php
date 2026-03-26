@@ -87,6 +87,14 @@ class Propiedad
 
   public function setImagen($imagen)
   {
+    // Eliminar la imagen previa
+    if ($this->id) {
+      $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
+      if ($existeArchivo) {
+        unlink(CARPETA_IMAGENES . $this->imagen);
+      }
+    }
+    // Asignar al atributo de imagen el nombre de la imagen
     if ($imagen) {
       $this->imagen = $imagen;
     }
@@ -167,5 +175,15 @@ class Propiedad
       }
     }
     return $objeto;
+  }
+
+  // Sincroniza el objeto en memoria con los cambios realizados por el usuario
+  public function sincronizar($args = [])
+  {
+    foreach ($args as $key => $value) {
+      if (property_exists($this, $key) && !is_null($value)) {
+        $this->$key = $value;
+      }
+    }
   }
 }
