@@ -6,22 +6,13 @@ class ActiveRecord
 {
   // Base de Datos
   protected static $db;
-  protected static $columnasDB = ['id', 'titulo', 'precio', 'imagen', 'descripcion', 'habitaciones', 'wc', 'estacionamiento', 'vendedorId', 'creado'];
+  protected static $columnasDB = [];
   protected static $tabla = '';
 
   // Errores
   protected static $errores = [];
 
-  public $id;
-  public $titulo;
-  public $imagen;
-  public $descripcion;
-  public $precio;
-  public $habitaciones;
-  public $wc;
-  public $estacionamiento;
-  public $vendedorId;
-  public $creado;
+
 
   // Definir la conexión a la BDD
   public static function setDB($database)
@@ -29,19 +20,7 @@ class ActiveRecord
     self::$db = $database;
   }
 
-  public function __construct($args = [])
-  {
-    $this->id = $args['id'] ?? null;
-    $this->titulo = $args['titulo'] ?? '';
-    $this->imagen = $args['imagen'] ?? '';
-    $this->descripcion = $args['descripcion'] ?? '';
-    $this->precio = $args['precio'] ?? '';
-    $this->habitaciones = $args['habitaciones'] ?? '';
-    $this->wc = $args['wc'] ?? '';
-    $this->estacionamiento = $args['estacionamiento'] ?? '';
-    $this->vendedorId = $args['vendedorId'] ?? 1;
-    $this->creado = date('Y/m/d');
-  }
+
 
   public function guardar()
   {
@@ -109,7 +88,7 @@ class ActiveRecord
   public function atributos()
   {
     $atributos = [];
-    foreach (self::$columnasDB as $columna) {
+    foreach (static::$columnasDB as $columna) {
       if ($columna === 'id') continue;
       $atributos[$columna] = $this->$columna;
     }
@@ -221,7 +200,7 @@ class ActiveRecord
 
   protected static function crearObjeto($registro)
   {
-    $objeto = new self;
+    $objeto = new static;
 
     foreach ($registro as $key => $value) {
       if (property_exists($objeto, $key)) {
