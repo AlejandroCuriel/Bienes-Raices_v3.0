@@ -1,16 +1,11 @@
 <?php
 require_once '../includes/app.php';
-
 estaAutenticado();
 
-// Obtener las propiedades existentes
-// 1.- Importar la conexión
-$db = conectarBDD();
+use App\Propiedad;
 
-// 2.- Escribir el Query
-$query = 'SELECT * FROM propiedades';
-// 3.- Consultar la BDD
-$resultadoPropiedades = mysqli_query($db, $query);
+// Implementar un método para obtener todas las propiedades
+$propiedades = Propiedad::all();
 
 // Muestra mensaje condicional
 $resultado = $_GET['resultado'] ?? null;
