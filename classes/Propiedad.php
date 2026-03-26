@@ -44,6 +44,15 @@ class Propiedad
 
   public function guardar()
   {
+    if (isset($this->id)) {
+      $this->actualizar();
+    } else {
+      $this->crear();
+    }
+  }
+
+  public function crear()
+  {
     // Sanitizar los Datos
     $atributos = $this->sanitizarAtributos();
 
@@ -58,6 +67,27 @@ class Propiedad
     return $resultado;
   }
 
+  public function actualizar()
+  {
+    // Sanitizar los Datos
+    $atributos = $this->sanitizarAtributos();
+
+    $valores = [];
+    foreach ($atributos as $key => $value) {
+      $valores[] = "{$key}='{$value}'";
+    }
+    $query = "UPDATE propiedades SET ";
+    $query .= join(', ', $valores);
+    $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
+    $query .= " LIMIT 1 ";
+    $resultado = self::$db->query($query);
+
+    if ($resultado) {
+      // Redireccionar al usuario
+      header("Location: /admin?resultado=2");
+    }
+  }
+
   // Identificar y unir los atributos de la clase con los de la base de datos
   public function atributos()
   {
@@ -68,7 +98,7 @@ class Propiedad
     }
     return $atributos;
   }
-
+  // Sanitizar los atributos antes de insertarlos en la base de datos
   public function sanitizarAtributos()
   {
     $atributos = $this->atributos();
@@ -87,6 +117,14 @@ class Propiedad
 
   public function setImagen($imagen)
   {
+    // Eliminar la imagen previa
+    if (isset($this->id)) {
+      $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
+      if ($existeArchivo) {
+        unlink(CARPETA_IMAGENES . $this->imagen);
+      }
+    }
+    // Asignar al atributo de imagen el nombre de la imagen
     if ($imagen) {
       $this->imagen = $imagen;
     }
@@ -131,6 +169,14 @@ class Propiedad
     return $resultado;
   }
 
+  // Buscar un registro por ID
+  public static function find($id)
+  {
+    $query = "SELECT * FROM propiedades WHERE id = {$id}";
+    $resultado = self::consultarSQL($query);
+    return array_shift($resultado);
+  }
+
   public static function consultarSQL($query)
   {
     // Consultar la Base de Datos
@@ -159,5 +205,15 @@ class Propiedad
       }
     }
     return $objeto;
+  }
+
+  // Sincroniza el objeto en memoria con los cambios realizados por el usuario
+  public function sincronizar($args = [])
+  {
+    foreach ($args as $key => $value) {
+      if (property_exists($this, $key) && !is_null($value)) {
+        $this->$key = $value;
+      }
+    }
   }
 }

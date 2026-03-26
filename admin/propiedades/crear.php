@@ -20,14 +20,16 @@ $propiedad = new Propiedad;
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-  $propiedad = new Propiedad($_POST);
+  // Crea una nueva instancia
+  $propiedad = new Propiedad($_POST['propiedad']);
 
   // Generar nombre unico
+  $manager = new Image(new Driver());
   $nombreImagen = md5(uniqid(rand(), true)) . '.jpg';
-  if ($_FILES['imagen']['tmp_name']) {
-    $manager = new Image(Driver::class);
-    $imagen = $manager->read($_FILES['imagen']['tmp_name'])->cover(800, 600);
+
+  if ($_FILES['propiedad']['tmp_name']['imagen']) {
+    // Solo para Intervention Image v3
+    $imagen = $manager->read($_FILES['propiedad']['tmp_name']['imagen'])->cover(800, 600);
     $propiedad->setImagen($nombreImagen);
   }
 
