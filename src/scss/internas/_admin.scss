@@ -33,6 +33,13 @@ table.vendedores {
   .imagen-tabla {
     width: 10rem;
   }
+
+  .imagen-perfil {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 }
 .imagen-small {
   width: 20rem;
