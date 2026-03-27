@@ -31,3 +31,10 @@ function sanitizarHTML($html): string
   $html = htmlspecialchars($html);
   return $html;
 }
+
+// Validar tipo de Contenido
+function validarTipoContenido($tipo)
+{
+  $tipos = ['vendedor', 'propiedad'];
+  return in_array($tipo, $tipos);
+}
