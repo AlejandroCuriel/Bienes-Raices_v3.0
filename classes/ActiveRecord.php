@@ -12,15 +12,14 @@ class ActiveRecord
   // Errores
   protected static $errores = [];
 
-
+  // Variables compartidas por todas las clases
+  public ?int $id = null;
 
   // Definir la conexión a la BDD
   public static function setDB($database)
   {
     self::$db = $database;
   }
-
-
 
   public function guardar()
   {
@@ -79,9 +78,14 @@ class ActiveRecord
     $resultado = self::$db->query($query);
 
     if ($resultado) {
-      $this->borrarImagen();
+      $this->despuesDeEliminar();
       header('location: /admin?resultado=3');
     }
+  }
+
+  protected function despuesDeEliminar(): void
+  {
+    // Hook para que cada modelo ejecute lógica post-eliminación si la necesita.
   }
 
   // Identificar y unir los atributos de la clase con los de la base de datos
@@ -103,28 +107,6 @@ class ActiveRecord
       $sanitizado[$key] = self::$db->escape_string($value);
     }
     return $sanitizado;
-  }
-
-  // Subir/Sobreescribir la imagen de la propiedad
-  public function setImagen($imagen)
-  {
-    // Eliminar la imagen previa
-    if (!is_null($this->id)) {
-      $this->borrarImagen();
-    }
-    // Asignar al atributo de imagen el nombre de la imagen
-    if ($imagen) {
-      $this->imagen = $imagen;
-    }
-  }
-
-  // Eliminar el archivo
-  public function borrarImagen()
-  {
-    $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
-    if ($existeArchivo) {
-      unlink(CARPETA_IMAGENES . $this->imagen);
-    }
   }
 
   // Validación de errores
@@ -149,6 +131,9 @@ class ActiveRecord
   }
 
   // Buscar un registro por ID
+  /**
+   * @return static|null
+   */
   public static function find($id)
   {
     $query = "SELECT * FROM " . static::$tabla . " WHERE id = {$id}";
@@ -156,6 +141,9 @@ class ActiveRecord
     return array_shift($resultado);
   }
 
+  /**
+   * @return static[]
+   */
   public static function consultarSQL($query)
   {
     // Consultar la Base de Datos
@@ -164,7 +152,7 @@ class ActiveRecord
     // Iterar los resultados
     $array = [];
     while ($registro = $resultado->fetch_assoc()) {
-      $array[] = self::crearObjeto($registro);
+      $array[] = static::crearObjeto($registro);
     }
 
     // Liberar la memoria
@@ -174,6 +162,9 @@ class ActiveRecord
     return $array;
   }
 
+  /**
+   * @return static
+   */
   protected static function crearObjeto($registro)
   {
     $objeto = new static;
