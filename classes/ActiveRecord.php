@@ -34,13 +34,12 @@ class ActiveRecord
   {
     // Sanitizar los Datos
     $atributos = $this->sanitizarAtributos();
-
     // Insertar en la base de datos la propiedad
     $query = " INSERT INTO " . static::$tabla . " ( ";
     $query .= join(', ', array_keys($atributos));
-    $query .= " ) VALUES (' ";
+    $query .= " ) VALUES ('";
     $query .= join("', '", array_values($atributos));
-    $query .= " ') ";
+    $query .= "') ";
 
     $resultado = self::$db->query($query);
 
