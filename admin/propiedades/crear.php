@@ -2,17 +2,15 @@
 require_once '../../includes/app.php';
 
 use App\Propiedad;
+use App\Vendedor;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager as Image;
 
 estaAutenticado();
 
-// Conectar Base de Datos
-$db = conectarBDD();
+// Consulta para obtener los vendedores
+$vendedores = Vendedor::all();
 
-// Obtener vendedores
-$consulta = 'SELECT * FROM vendedores';
-$resultado = mysqli_query($db, $consulta);
 // Array para los errores
 $errores = Propiedad::getErrores();
 
