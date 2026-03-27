@@ -8,7 +8,7 @@
    <input type="number" id="Precio" name="propiedad[precio]" min='1' placeholder="Precio Propiedad" value="<?php echo sanitizarHTML($propiedad->precio); ?>">
 
    <label for="imagen">Image:</label>
-   <input type="file" id="imagen" accept="image/jpeg, image/pnp" name="propiedad[imagen]">
+   <input type="file" id="imagen" accept="image/jpeg, image/png" name="propiedad[imagen]">
 
    <?php if ($propiedad->imagen) : ?>
      <img src="/imagenes/<?php echo $propiedad->imagen; ?>" alt="Propiedad en venta" class="imagen-small" />
