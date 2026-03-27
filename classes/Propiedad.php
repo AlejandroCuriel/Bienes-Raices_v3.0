@@ -8,7 +8,6 @@ class Propiedad extends ActiveRecord
 
   protected static $columnasDB = ['id', 'titulo', 'precio', 'imagen', 'descripcion', 'habitaciones', 'wc', 'estacionamiento', 'vendedorId', 'creado'];
 
-  public $id;
   public $titulo;
   public $imagen;
   public $descripcion;
@@ -38,6 +37,9 @@ class Propiedad extends ActiveRecord
     if (!$this->titulo) {
       self::$errores[] = "Debes añadir un título";
     }
+    if (strlen($this->titulo) > 70) {
+      self::$errores[] = "El título debe tener como máximo 70 caracteres";
+    }
     if (!$this->precio) {
       self::$errores[] = "El precio es obligatorio";
     }
@@ -61,5 +63,33 @@ class Propiedad extends ActiveRecord
     }
 
     return self::$errores;
+  }
+
+  protected function despuesDeEliminar(): void
+  {
+    $this->borrarImagen();
+    header('location: /admin?resultado=3');
+  }
+
+  // Eliminar el archivo
+  public function borrarImagen()
+  {
+    $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
+    if ($existeArchivo) {
+      unlink(CARPETA_IMAGENES . $this->imagen);
+    }
+  }
+
+  // Subir/Sobreescribir la imagen de la propiedad
+  public function setImagen($imagen)
+  {
+    // Eliminar la imagen previa
+    if (!is_null($this->id)) {
+      $this->borrarImagen();
+    }
+    // Asignar al atributo de imagen el nombre de la imagen
+    if ($imagen) {
+      $this->imagen = $imagen;
+    }
   }
 }
