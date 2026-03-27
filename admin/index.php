@@ -25,9 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $propiedad = Propiedad::find($id);
         $resultado = $propiedad->eliminar();
       } elseif ($tipo === 'vendedor') {
-      // Obtener los datos del vendedor
-      $vendedor = Vendedor::find($id);
-      $resultado = $vendedor->eliminar();
+        // Obtener los datos del vendedor
+        $vendedor = Vendedor::find($id);
+        $resultado = $vendedor->eliminar();
+      }
     }
   }
 }
@@ -52,7 +53,8 @@ incluirTemplate('header');
       null;
   } ?>
 
-  <a href="/admin/propiedades/crear.php" class="boton boton-verde">Nuega Propiedad</a>
+  <a href="/admin/propiedades/crear.php" class="boton boton-verde">Nueva Propiedad</a>
+  <a href="/admin/vendedores/crear.php" class="boton boton-amarillo">Nuevo(a) Vendedor</a>
 
   <h2>Propiedades</h2>
   <?php if (count($propiedades) > 0) : ?>
@@ -94,6 +96,7 @@ incluirTemplate('header');
       <thead>
         <tr>
           <th>ID</th>
+          <th>Perfil</th>
           <th>Nombre</th>
           <th>Telefono</th>
           <th>Acciones</th>
@@ -103,6 +106,8 @@ incluirTemplate('header');
         <?php foreach ($vendedores as $vendedor) : ?>
           <tr>
             <td><?= $vendedor->id ?></td>
+            <td><img class="imagen-perfil" src="../src/img/perfil/<?= $vendedor->imagen; ?>" alt="Foto de perfil de <?= $vendedor->nombre ?>" width="80px" height="80px" /></td>
+
             <td><?= $vendedor->nombre ?> <?= $vendedor->apellido ?></td>
             <td><?= $vendedor->telefono ?></td>
             <td>
