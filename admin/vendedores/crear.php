@@ -47,7 +47,7 @@ incluirTemplate('header');
 ?>
 
 <main class="contenedor seccion">
-  <h1>Registrar vendedor</h1>
+  <h1>Registrar Vendedor(a)</h1>
 
   <a href="/admin" class="boton boton-verde">Volver</a>
 
