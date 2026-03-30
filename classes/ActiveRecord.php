@@ -12,15 +12,14 @@ class ActiveRecord
   // Errores
   protected static $errores = [];
 
-
+  // Variables compartidas por todas las clases
+  public ?int $id = null;
 
   // Definir la conexión a la BDD
   public static function setDB($database)
   {
     self::$db = $database;
   }
-
-
 
   public function guardar()
   {
@@ -35,13 +34,12 @@ class ActiveRecord
   {
     // Sanitizar los Datos
     $atributos = $this->sanitizarAtributos();
-
     // Insertar en la base de datos la propiedad
     $query = " INSERT INTO " . static::$tabla . " ( ";
     $query .= join(', ', array_keys($atributos));
-    $query .= " ) VALUES (' ";
+    $query .= " ) VALUES ('";
     $query .= join("', '", array_values($atributos));
-    $query .= " ') ";
+    $query .= "') ";
 
     $resultado = self::$db->query($query);
 
@@ -79,9 +77,14 @@ class ActiveRecord
     $resultado = self::$db->query($query);
 
     if ($resultado) {
-      $this->borrarImagen();
+      $this->despuesDeEliminar();
       header('location: /admin?resultado=3');
     }
+  }
+
+  protected function despuesDeEliminar(): void
+  {
+    // Hook para que cada modelo ejecute lógica post-eliminación si la necesita.
   }
 
   // Identificar y unir los atributos de la clase con los de la base de datos
@@ -108,59 +111,13 @@ class ActiveRecord
   // Validación de errores
   public static function getErrores()
   {
-    return self::$errores;
-  }
-
-  // Subir/Sobreescribir la imagen de la propiedad
-  public function setImagen($imagen)
-  {
-    // Eliminar la imagen previa
-    if (!is_null($this->id)) {
-      $this->borrarImagen();
-    }
-    // Asignar al atributo de imagen el nombre de la imagen
-    if ($imagen) {
-      $this->imagen = $imagen;
-    }
-  }
-
-  // Eliminar el archivo
-  public function borrarImagen()
-  {
-    $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
-    if ($existeArchivo) {
-      unlink(CARPETA_IMAGENES . $this->imagen);
-    }
+    return static::$errores;
   }
 
   public function validar()
   {
-    if (!$this->titulo) {
-      self::$errores[] = "Debes añadir un título";
-    }
-    if (!$this->precio) {
-      self::$errores[] = "El precio es obligatorio";
-    }
-    if (strlen($this->descripcion) < 50) {
-      self::$errores[] = "La descripción debe tener al menos 50 caracteres";
-    }
-    if (!$this->habitaciones) {
-      self::$errores[] = "El número de habitaciones es obligatorio";
-    }
-    if (!$this->wc) {
-      self::$errores[] = "El número de baños es obligatorio";
-    }
-    if (!$this->estacionamiento) {
-      self::$errores[] = "El número de estacionamientos es obligatorio";
-    }
-    if (!$this->vendedorId) {
-      self::$errores[] = "Elige un vendedor";
-    }
-    if (!$this->imagen) {
-      self::$errores[] = "La imagen es obligatoria";
-    }
-
-    return self::$errores;
+    static::$errores = [];
+    return static::$errores;
   }
 
   // Listar todas las propiedades
@@ -173,6 +130,9 @@ class ActiveRecord
   }
 
   // Buscar un registro por ID
+  /**
+   * @return static|null
+   */
   public static function find($id)
   {
     $query = "SELECT * FROM " . static::$tabla . " WHERE id = {$id}";
@@ -180,6 +140,9 @@ class ActiveRecord
     return array_shift($resultado);
   }
 
+  /**
+   * @return static[]
+   */
   public static function consultarSQL($query)
   {
     // Consultar la Base de Datos
@@ -188,7 +151,7 @@ class ActiveRecord
     // Iterar los resultados
     $array = [];
     while ($registro = $resultado->fetch_assoc()) {
-      $array[] = self::crearObjeto($registro);
+      $array[] = static::crearObjeto($registro);
     }
 
     // Liberar la memoria
@@ -198,6 +161,9 @@ class ActiveRecord
     return $array;
   }
 
+  /**
+   * @return static
+   */
   protected static function crearObjeto($registro)
   {
     $objeto = new static;

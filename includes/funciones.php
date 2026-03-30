@@ -3,6 +3,8 @@
 define('TEMPLATES_URL', __DIR__ . '/templates/');
 define('FUNCIONES_URL', __DIR__ . 'funciones.php');
 define('CARPETA_IMAGENES', __DIR__ . '/../imagenes/');
+define('CARPETA_IMAGENES_PERFIL', __DIR__ . '/../imagenes_perfil/');
+
 
 function incluirTemplate(string $nombre, bool $inicio = false)
 {
@@ -30,4 +32,32 @@ function sanitizarHTML($html): string
 {
   $html = htmlspecialchars($html);
   return $html;
+}
+
+// Validar tipo de Contenido
+function validarTipoContenido($tipo)
+{
+  $tipos = ['vendedor', 'propiedad'];
+  return in_array($tipo, $tipos);
+}
+
+// Muestra los mensajes
+function mostrarNotificacion($codigo)
+{
+  $mensaje = '';
+  switch ($codigo) {
+    case 1:
+      $mensaje = 'Creado Correctamente';
+      break;
+    case 2:
+      $mensaje = 'Actualizado Correctamente';
+      break;
+    case 3:
+      $mensaje = 'Eliminado Correctamente';
+      break;
+    default:
+      $mensaje = false;
+      break;
+  }
+  return $mensaje;
 }

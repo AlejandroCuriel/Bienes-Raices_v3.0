@@ -1,6 +1,7 @@
 node_modules
 build
 imagenes
+imagenes_perfil
 .env
 
 /vendor/
