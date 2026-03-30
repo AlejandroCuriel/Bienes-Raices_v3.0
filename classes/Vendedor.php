@@ -28,8 +28,8 @@ class Vendedor extends ActiveRecord
     }
     // Validar el tamaño de la imagen (máximo 150kb)
     if (isset($_FILES['vendedor']['tmp_name']['imagen']) && $_FILES['vendedor']['tmp_name']['imagen'] != '') {
-      $tamañoImagen = $_FILES['vendedor']['size']['imagen'];
-      if ($tamañoImagen > 150 * 1024) {
+      $sizeImagen = $_FILES['vendedor']['size']['imagen'];
+      if ($sizeImagen > 150 * 1024) {
         self::$errores[] = "La imagen debe ser menor a 150kb";
       }
     }
@@ -41,6 +41,9 @@ class Vendedor extends ActiveRecord
     }
     if (!$this->telefono) {
       self::$errores[] = "Debes añadir un teléfono";
+    }
+    if (!preg_match('/^[0-9]{10}$/', $this->telefono)) {
+      self::$errores[] = "El teléfono debe tener 10 dígitos numéricos";
     }
 
     return self::$errores;
