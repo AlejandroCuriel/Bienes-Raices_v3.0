@@ -29,7 +29,6 @@ incluirTemplate('header', true);
   <h2>Casas y Depas en Venta</h2>
 
   <?php
-  $limit = 3;
   include_once 'includes/templates/anuncios.php'
   ?>
 
