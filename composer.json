@@ -6,8 +6,14 @@
     "lint": "phpcs",
     "lint:fix": "phpcbf",
     "format": "php-cs-fixer fix",
-    "fix": "composer lint:fix && composer format",
-    "fix:check": "composer fix && composer lint"
+    "fix": [
+      "@lint:fix",
+      "@format"
+    ],
+    "fix:check": [
+      "@fix",
+      "@lint"
+    ]
   },
   "authors": [
     {
