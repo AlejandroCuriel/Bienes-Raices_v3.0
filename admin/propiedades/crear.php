@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($tmpImagen !== '') {
         // Solo para Intervention Image v3
-        $imagen = $manager->read($tmpImagen)->cover(800, 600);
+        $imagen = $manager->decode($tmpImagen)->cover(800, 600);
         $propiedad->setImagen($nombreImagen);
     }
 
