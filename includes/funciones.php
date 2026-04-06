@@ -6,7 +6,7 @@ define('CARPETA_IMAGENES', __DIR__ . '/../imagenes/');
 define('CARPETA_IMAGENES_PERFIL', __DIR__ . '/../imagenes_perfil/');
 
 
-function incluirTemplate(string $nombre): void
+function incluirTemplate(string $nombre, bool $inicio = false): void
 {
     include_once TEMPLATES_URL . "{$nombre}.php";
 }

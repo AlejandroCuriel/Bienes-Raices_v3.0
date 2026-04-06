@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Subida de archivos
     if ($tmpImagen !== '') {
         // Solo para Intervention Image v3
-        $imagen = $manager->read($tmpImagen)->cover(200, 200);
+        $imagen = $manager->decode($tmpImagen)->cover(200, 200);
         $vendedor->setImagen($nombreImagen);
     }
 
