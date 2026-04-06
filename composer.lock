@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "05de0d54e2a1cb2e9b7a314e16283b98",
+    "content-hash": "7991e45de0c96a5dbb033a28e9ebdd7e",
     "packages": [
         {
             "name": "intervention/gif",
@@ -2957,7 +2957,9 @@
     "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {},
+    "platform": {
+        "php": "^8.3"
+    },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"
 }
