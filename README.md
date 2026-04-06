@@ -1,201 +1,182 @@
 # Bienes Raices
 
-A static real estate (bienes raíces) website built with vanilla HTML, SCSS, and JavaScript. The project uses Gulp for asset compilation, image optimization, and live reload during development.
+Proyecto web de bienes raices con PHP + MySQL, maquetacion responsive y pipeline de assets con Gulp.
 
----
+## Resumen
 
-## Table of Contents
+Este repositorio combina:
 
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Development](#development)
-- [Build Output](#build-output)
-- [Features](#features)
-- [Pages](#pages)
-- [Conventions & Best Practices](#conventions--best-practices)
-- [Contributing](#contributing)
+- Sitio publico multi pagina (`index`, `anuncios`, `anuncio`, `blog`, `entrada`, `nosotros`, `contacto`)
+- Area administrativa con autenticacion y CRUD de propiedades
+- Compilacion de SCSS/JS e imagenes optimizadas en `build/`
+- Entorno Docker para desarrollo local
+- CI en GitHub Actions para validar build de frontend
+- Dependabot para actualizar dependencias
 
----
+## Stack Tecnico
 
-## Overview
+- PHP (con `mysqli`)
+- MySQL 8.4
+- Composer (`intervention/image`)
+- Node.js 22 + pnpm 10
+- Gulp 5 + Sass + Terser + Sharp
+- Docker + Docker Compose
 
-This is a multi-page real estate showcase site with a responsive layout, dark mode support, and modern image formats (WebP, AVIF). Source assets live in `src/` and are compiled into the `build/` directory. HTML pages reference the built CSS and JS from `build/`.
+## Estructura Principal
 
----
-
-## Tech Stack
-
-| Layer      | Technology |
-|-----------|------------|
-| Markup    | HTML5      |
-| Styles    | SCSS (Sass), BEM-style structure |
-| Scripts   | Vanilla JavaScript (ES modules) |
-| Build     | Gulp 5     |
-| Images    | Sharp (JPEG, WebP, AVIF generation) |
-
-**Key dev dependencies:** `gulp`, `gulp-sass`, `gulp-concat`, `gulp-terser`, `gulp-rename`, `sharp`, `glob`, `sass`.
-
----
-
-## Project Structure
-
-```
-bienesRaices/
-├── index.html          # Home
-├── anuncios.html       # Listings
-├── anuncio.html        # Single listing
-├── blog.html           # Blog index
-├── entrada.html        # Blog post
-├── nosotros.html       # About
-├── contacto.html       # Contact
-├── base.html           # Base layout reference
-├── gulpfile.js         # Gulp tasks (CSS, JS, images, watch)
-├── package.json
-├── pnpm-lock.yaml
-├── src/
-│   ├── scss/
-│   │   ├── app.scss              # Main SCSS entry
-│   │   ├── base/                 # Reset, variables, mixins, globals
-│   │   ├── layout/               # Header, footer, forms, etc.
-│   │   └── internas/             # Page-specific styles
-│   ├── js/
-│   │   ├── app.js                # Main JS (dark mode, mobile menu)
-│   │   └── modernizr.js
-│   └── img/                      # Source images (JPG, SVG)
-└── build/                        # Compiled assets (do not edit by hand)
-    ├── css/
-    │   └── app.css
-    ├── js/
-    │   └── bundle.min.js
-    └── img/                      # Optimized + WebP/AVIF variants
+```text
+.
+|-- admin/
+|   |-- index.php
+|   `-- propiedades/
+|       |-- crear.php
+|       `-- actualizar.php
+|-- classes/
+|   `-- Propiedad.php
+|-- includes/
+|   |-- app.php
+|   |-- funciones.php
+|   |-- config/database.php
+|   `-- templates/
+|       |-- header.php
+|       |-- footer.php
+|       `-- anuncios.php
+|-- src/
+|   |-- scss/
+|   |-- js/
+|   `-- img/
+|-- build/                # generado por Gulp
+|-- imagenes/             # imagenes subidas por admin
+|-- docker-compose.yml
+|-- dockerfile
+|-- gulpfile.js
+|-- package.json
+|-- composer.json
+`-- .github/
+    |-- workflows/build-assets.yml
+    `-- dependabot.yml
 ```
 
----
+## Requisitos
 
-## Prerequisites
+- Docker Desktop (recomendado), o
+- PHP 8.x + MySQL + Node.js 22 + pnpm + Composer
 
-- **Node.js** (v18+ recommended)
-- **pnpm** (or npm/yarn)
+## Configuracion Rapida con Docker
 
----
+1. Crear variables de entorno desde el ejemplo:
 
-## Installation
+```bash
+cp .env.example .env
+```
 
-1. Clone the repository and go to the project folder:
+1. Levantar servicios:
 
-   ```bash
-   cd bienesRaices
-   ```
+```bash
+docker compose up -d --build
+```
 
-2. Install dependencies:
+1. Abrir aplicacion:
 
-   ```bash
-   pnpm install
-   ```
+- Web: `http://localhost:8080` (o el puerto definido en `APP_PORT`)
+- MySQL host local: `127.0.0.1:3307` (o `MYSQL_HOST_PORT`)
 
-   Or with npm:
+Servicios definidos:
 
-   ```bash
-   npm install
-   ```
+- `web`: PHP 8.4 + Apache
+- `db`: MySQL 8.4
+- `node`: watcher de assets con `pnpm run dev`
 
----
+## Configuracion Manual (sin Docker)
 
-## Development
+1. Instalar dependencias de frontend:
 
-Run the Gulp dev task to compile assets and watch for changes:
+```bash
+pnpm install
+```
+
+1. Instalar dependencias PHP:
+
+```bash
+composer install
+```
+
+1. Construir o vigilar assets:
 
 ```bash
 pnpm run dev
 ```
 
-Or:
+1. Servir proyecto con XAMPP/Apache o con servidor embebido de PHP.
 
-```bash
-npm run dev
-```
+## Scripts Disponibles
 
-This will:
+En `package.json`:
 
-- Compile SCSS → `build/css/app.css` (with source maps)
-- Concatenate and minify JS → `build/js/bundle.min.js`
-- Process images from `src/img/` → `build/img/` (JPEG + WebP + AVIF; SVGs copied as-is)
-- Watch `src/scss`, `src/js`, and `src/img` for changes and re-run the relevant tasks
+- `pnpm run dev`: compila y queda en modo watch
+- `pnpm run build`: build de una sola ejecucion (`gulp build`)
 
-Serve the project with any static server (e.g. XAMPP, Live Server, or `npx serve .`) and open the root or `index.html`.
+Salida de assets:
 
----
+- `src/scss/**/*.scss` -> `build/css/app.css`
+- `src/js/**/*.js` -> `build/js/bundle.min.js`
+- `src/img/**/*` -> `build/img/` (incluye `.webp` y `.avif`)
 
-## Build Output
+## Flujo de Aplicacion
 
-| Source              | Output |
-|---------------------|--------|
-| `src/scss/**/*.scss` | `build/css/app.css` (+ `.map`) |
-| `src/js/**/*.js`     | `build/js/bundle.min.js` |
-| `src/img/*.jpg`      | `build/img/<name>.jpg`, `.webp`, `.avif` |
-| `src/img/*.svg`      | `build/img/<name>.svg` (copied) |
+- `includes/app.php` inicializa funciones, conexion y autoload
+- `classes/Propiedad.php` encapsula logica del modelo de propiedad
+- `admin/index.php` lista propiedades y permite eliminar
+- `admin/propiedades/crear.php` crea propiedad y procesa imagen con Intervention Image
+- `admin/propiedades/actualizar.php` actualiza propiedad e imagen
+- `login.php` autentica usuarios
+- `cerrar-sesion.php` destruye sesion
 
-HTML files reference:
+## Base de Datos
 
-- `build/css/app.css`
-- `build/js/bundle.min.js`
-- `build/img/...` for images
+La conexion actual esta en `includes/config/database.php` y usa valores fijos:
 
----
+- host: `localhost`
+- user: `root`
+- pass: `root`
+- db: `bienesraices_crud`
 
-## Features
+Si usas Docker con `db` como contenedor, ajusta este archivo para usar host `db` o lee variables de entorno.
 
-- **Responsive layout** with a mobile-friendly navigation (hamburger menu)
-- **Dark mode** via system preference and a toggle button (persists during session)
-- **Modern images**: `<picture>` with WebP/JPEG (and AVIF where needed) for better performance
-- **Lazy loading** on images where applied (`loading="lazy"`)
-- **Modular SCSS**: base (normalize, variables, mixins), layout components, and page-specific partials
+## Usuario Admin
 
----
+Existe `usuario.php` para insertar un usuario de prueba con password hasheado.
 
-## Pages
+Recomendacion:
 
-| File           | Purpose                    |
-|----------------|----------------------------|
-| `index.html`   | Home: hero, features, listings preview, CTA |
-| `anuncios.html`| All property listings      |
-| `anuncio.html` | Single property detail     |
-| `nosotros.html`| About us                   |
-| `blog.html`    | Blog listing               |
-| `entrada.html` | Single blog post           |
-| `contacto.html`| Contact form               |
-| `base.html`    | Base layout template       |
+- Ejecutarlo solo una vez para bootstrap local
+- No usar ese flujo tal cual en produccion
 
----
+## Automatizacion en GitHub
 
-## Conventions & Best Practices
+### CI
 
-1. **Do not edit files inside `build/`** — they are generated. Change source files in `src/` and run `pnpm run dev`.
-2. **Images**: Add originals (JPG/PNG) and SVGs in `src/img/`. Gulp will generate optimized and multi-format outputs.
-3. **Styles**: Follow the existing SCSS structure (base → layout → internas). Use variables and mixins from `base/`.
-4. **Scripts**: Add or edit files in `src/js/`; they are concatenated and minified into `build/js/bundle.min.js`.
-5. **HTML**: Keep shared structure (header, footer, nav) in sync across pages; consider a simple include/template step if the project grows.
-6. **Accessibility**: Use semantic HTML, `alt` on images, and ensure interactive elements (e.g. dark mode toggle, mobile menu) are keyboard-friendly.
+Workflow: `.github/workflows/build-assets.yml`
 
----
+- Se ejecuta en pull requests a `main` y `dev`
+- Instala pnpm + Node 22
+- Ejecuta `pnpm install --frozen-lockfile`
+- Ejecuta build (`pnpm exec gulp build`)
+- Verifica que `build/` exista y no este vacio
 
-## Contributing
+### Dependabot
 
-Pull requests are welcome. When opening a PR, please use the [pull request template](.github/PULL_REQUEST_TEMPLATE.md):
+Archivo: `.github/dependabot.yml`
 
-1. **Description** — Summarize your changes and link the related issue (bullet points preferred).
-2. **Ticket link** — Add the issue/ticket URL if it applies.
-3. **Type of change** — Check one: New feature, Hot Fix, Bug fix, or Documentation update.
-4. **Checklist** — Confirm your code follows the project style, you’ve self-reviewed, and that docs/tests are updated as needed.
-5. **Screenshots** — For UI changes, add desktop and mobile screenshots if relevant.
+Ecosistemas configurados:
 
-The **Build Assets** workflow runs on push to `main` when `src/`, `package.json`, `pnpm-lock.yaml`, or `gulpfile.js` change. Ensure `pnpm run build` passes locally before pushing.
+- `npm`
+- `composer`
+- `docker-compose`
+- `github-actions`
 
----
+## Notas Importantes
 
-## License
-
-ISC (see `package.json`).
+- `build/`, `imagenes/`, `node_modules/`, `.env` y `vendor/` estan ignorados por git
+- No edites manualmente archivos dentro de `build/`
+- Si cambias SCSS/JS/imagenes fuente, vuelve a correr el pipeline de Gulp

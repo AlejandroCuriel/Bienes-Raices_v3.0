@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ruleset name="Custom Standard">
+    <description>Reglas personalizadas del proyecto</description>
+
+    <rule ref="PSR12"/>
+
+    <arg name="extensions" value="php"/>
+
+    <file>.</file>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+
+    <rule ref="Generic.Files.LineLength">
+        <include-pattern>*/classes/*</include-pattern>
+        <include-pattern>*/includes/app.php</include-pattern>
+        <include-pattern>*/includes/funciones.php</include-pattern>
+        <include-pattern>*/includes/config/*</include-pattern>
+        <properties>
+            <property name="lineLimit" value="120"/>
+        </properties>
+    </rule>
+</ruleset>

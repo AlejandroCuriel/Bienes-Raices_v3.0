@@ -1,0 +1,17 @@
+parameters:
+  level: max
+  paths:
+    - admin
+    - includes
+    - nosotros.php
+    - login.php
+    - index.php
+    - entrada.php
+    - contacto.php
+    - blog.php
+    - base.php
+    - anuncios.php
+    - anuncio.php
+
+  scanFiles:
+    - includes/funciones.php
