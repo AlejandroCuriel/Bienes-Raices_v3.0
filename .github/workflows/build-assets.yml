@@ -2,13 +2,13 @@ name: Build Assets CI
 run-name: "Build Assets CI - ${{ github.ref }}"
 on:
   pull_request:
-    branches: [ main, dev ]
+    branches: [main, dev]
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
