@@ -39,7 +39,7 @@ services:
       - db_data:/var/lib/mysql
 
   node:
-    image: node:22-alpine
+    image: node:25-alpine
     container_name: bienesraices-node
     working_dir: /app
     environment:
