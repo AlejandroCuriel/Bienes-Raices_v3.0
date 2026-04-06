@@ -1,0 +1,45 @@
+name: PHP Composer & Static Analysis
+
+on:
+  pull_request:
+    branches: ["main", "dev"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98 #v6: 6.0.2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2" # Define tu versión de PHP
+          tools: phpstan
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: PHP_CodeSniffer
+        run: composer lint
+
+      - name: PHPStan analysis
+        run: vendor/bin/phpstan analyse --no-progress

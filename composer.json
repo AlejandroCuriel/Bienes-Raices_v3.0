@@ -1,0 +1,40 @@
+{
+  "name": "alex/bienes-raices",
+  "description": "Creando un proyecto con POO",
+  "type": "project",
+  "scripts": {
+    "lint": "phpcs",
+    "lint:fix": "phpcbf",
+    "format": "php-cs-fixer fix",
+    "fix": [
+      "@lint:fix",
+      "@format"
+    ],
+    "fix:check": [
+      "@fix",
+      "@lint"
+    ]
+  },
+  "authors": [
+    {
+      "name": "Alejandro Curiel",
+      "email": "alex_curielg@hotmail.com"
+    }
+  ],
+  "require": {
+    "intervention/image": "^3.11"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "./classes"
+    },
+    "files": [
+      "includes/funciones.php"
+    ]
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^2.1",
+    "friendsofphp/php-cs-fixer": "^3.94",
+    "squizlabs/php_codesniffer": "^4.0"
+  }
+}
