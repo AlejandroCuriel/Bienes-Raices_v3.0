@@ -1,8 +1,13 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__)
-    ->exclude(['vendor', 'node_modules', 'build', 'src'])
+    // Solo codigo de logica para evitar conflictos de sangria en vistas mixtas PHP+HTML.
+    ->in([
+        __DIR__ . '/classes',
+        __DIR__ . '/includes',
+    ])
+    // Excluir plantillas HTML/PHP de includes/templates.
+    ->exclude(['templates'])
     ->name('*.php');
 
 return (new PhpCsFixer\Config())
