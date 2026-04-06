@@ -5,43 +5,55 @@ $db = conectarBDD();
 // Autenticar al usuario
 $errores = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $email = mysqli_real_escape_string($db, filter_var($_POST['email'], FILTER_VALIDATE_EMAIL));
-  $password = mysqli_real_escape_string($db, $_POST['password']);
+    $emailInput = $_POST['email'] ?? '';
+    $passwordInput = $_POST['password'] ?? '';
 
-  if (!$email) {
-    $errores[] = 'El email es obligatorio o no es válido';
-  }
+    $emailInput = is_string($emailInput) ? $emailInput : '';
+    $passwordInput = is_string($passwordInput) ? $passwordInput : '';
 
-  if (!$password) {
-    $errores[] = 'El passwor es obligatorio';
-  }
+    $emailFiltrado = filter_var($emailInput, FILTER_VALIDATE_EMAIL);
+    $emailFiltrado = is_string($emailFiltrado) ? $emailFiltrado : '';
 
-  if (empty($errores)) {
-    // Revisar si el usuario existe
-    $query = "SELECT * FROM usuarios WHERE email = '{$email}'";
-    $resultado = mysqli_query($db, $query);
+    $email = mysqli_real_escape_string($db, $emailFiltrado);
+    $password = mysqli_real_escape_string($db, $passwordInput);
 
-    if ($resultado->num_rows) {
-      // Revisar si el password es correcto
-      $usuario = mysqli_fetch_assoc($resultado);
-      $auth = password_verify($password, $usuario['password']);
-      var_dump($auth);
-      if ($auth) {
-        // El usuario esta autenticado
-        session_start();
-
-        // LLenar el arreglo de la sesion
-        $_SESSION['usuario'] = $usuario['email'];
-        $_SESSION['login'] = true;
-
-        header('Location: admin/');
-      } else {
-        $errores[] = 'Contraseña incorrecta';
-      }
-    } else {
-      $errores[] = "El usuario no existe";
+    if (!$email) {
+        $errores[] = 'El email es obligatorio o no es válido';
     }
-  }
+
+    if (!$password) {
+        $errores[] = 'El passwor es obligatorio';
+    }
+
+    if (empty($errores)) {
+        // Revisar si el usuario existe
+        $query = "SELECT * FROM usuarios WHERE email = '{$email}'";
+        $resultado = mysqli_query($db, $query);
+
+        if ($resultado instanceof mysqli_result && $resultado->num_rows > 0) {
+            // Revisar si el password es correcto
+            $usuario = mysqli_fetch_assoc($resultado);
+            $passwordHash = is_array($usuario) && isset($usuario['password']) && is_string($usuario['password'])
+            ? $usuario['password']
+            : '';
+
+            $auth = $passwordHash !== '' && password_verify($password, $passwordHash);
+            if ($auth && is_array($usuario) && isset($usuario['email']) && is_string($usuario['email'])) {
+                // El usuario esta autenticado
+                session_start();
+
+                // LLenar el arreglo de la sesion
+                $_SESSION['usuario'] = $usuario['email'];
+                $_SESSION['login'] = true;
+
+                header('Location: admin/');
+            } else {
+                $errores[] = 'Contraseña incorrecta';
+            }
+        } else {
+            $errores[] = 'El usuario no existe';
+        }
+    }
 }
 
 incluirTemplate('header');
@@ -49,9 +61,9 @@ incluirTemplate('header');
 <main class="contenedor seccion contenido-centrado">
   <h1>Inciar Sesión</h1>
 
-  <?php foreach ($errores as $error): ?>
+  <?php foreach ($errores as $error) : ?>
     <div class="alerta error">
-      <?php print($error) ?>
+        <?php print($error) ?>
     </div>
   <?php endforeach ?>
 

@@ -6,58 +6,60 @@ define('CARPETA_IMAGENES', __DIR__ . '/../imagenes/');
 define('CARPETA_IMAGENES_PERFIL', __DIR__ . '/../imagenes_perfil/');
 
 
-function incluirTemplate(string $nombre, bool $inicio = false)
+function incluirTemplate(string $nombre, bool $inicio = false): void
 {
-  include_once TEMPLATES_URL . "{$nombre}.php";
+    include_once TEMPLATES_URL . "{$nombre}.php";
 }
 
-function estaAutenticado()
+function estaAutenticado(): void
 {
-  session_start();
-  if (!$_SESSION['login']) {
-    header('Location: /');
-  }
+    session_start();
+    if (!($_SESSION['login'] ?? false)) {
+        header('Location: /');
+        exit;
+    }
 }
 
-function debuguear($variable)
+function debuguear(mixed $variable): never
 {
-  echo '<pre>';
-  var_dump($variable);
-  echo '</pre>';
-  exit;
+    echo '<pre>';
+    var_dump($variable);
+    echo '</pre>';
+    exit;
 }
 
 // Escapa / Sanitizar el HTML
-function sanitizarHTML($html): string
+function sanitizarHTML(mixed $html): string
 {
-  $html = htmlspecialchars($html);
-  return $html;
+    $html = is_scalar($html) ? (string) $html : '';
+    $html = htmlspecialchars($html);
+    return $html;
 }
 
 // Validar tipo de Contenido
-function validarTipoContenido($tipo)
+function validarTipoContenido(string $tipo): bool
 {
-  $tipos = ['vendedor', 'propiedad'];
-  return in_array($tipo, $tipos);
+    $tipos = ['vendedor', 'propiedad'];
+    return in_array($tipo, $tipos);
 }
 
 // Muestra los mensajes
-function mostrarNotificacion($codigo)
+function mostrarNotificacion(int|string|null $codigo): string|false
 {
-  $mensaje = '';
-  switch ($codigo) {
-    case 1:
-      $mensaje = 'Creado Correctamente';
-      break;
-    case 2:
-      $mensaje = 'Actualizado Correctamente';
-      break;
-    case 3:
-      $mensaje = 'Eliminado Correctamente';
-      break;
-    default:
-      $mensaje = false;
-      break;
-  }
-  return $mensaje;
+    $mensaje = false;
+    switch ($codigo) {
+        case 1:
+            $mensaje = 'Creado Correctamente';
+            break;
+        case 2:
+            $mensaje = 'Actualizado Correctamente';
+            break;
+        case 3:
+            $mensaje = 'Eliminado Correctamente';
+            break;
+        default:
+            $mensaje = false;
+            break;
+    }
+    return $mensaje;
 }

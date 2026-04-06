@@ -14,38 +14,55 @@ $vendedores = Vendedor::all();
 // Array para los errores
 $errores = Propiedad::getErrores();
 
-$propiedad = new Propiedad;
+$propiedad = new Propiedad();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Crea una nueva instancia
-  $propiedad = new Propiedad($_POST['propiedad']);
-
-  // Generar nombre unico
-  $manager = new Image(new Driver());
-  $nombreImagen = md5(uniqid(rand(), true)) . '.jpg';
-
-  if ($_FILES['propiedad']['tmp_name']['imagen']) {
-    // Solo para Intervention Image v3
-    $imagen = $manager->read($_FILES['propiedad']['tmp_name']['imagen'])->cover(800, 600);
-    $propiedad->setImagen($nombreImagen);
-  }
-
-  $errores = $propiedad->validar();
-
-  if (empty($errores)) {
-    // *** SUBIDA DE ARCHIVOS ****
-    // Crear carpeta
-
-    if (!is_dir(CARPETA_IMAGENES)) {
-      mkdir(CARPETA_IMAGENES);
+    // Crea una nueva instancia
+    $args = $_POST['propiedad'] ?? [];
+    $args = is_array($args) ? $args : [];
+    /** @var array<string, mixed> $args */
+    $propiedad = new Propiedad($args);
+    $imagen = null;
+    $tmpImagen = '';
+    $archivoPropiedad = $_FILES['propiedad'] ?? null;
+    if (
+        is_array($archivoPropiedad)
+        && isset($archivoPropiedad['tmp_name'])
+        && is_array($archivoPropiedad['tmp_name'])
+        && isset($archivoPropiedad['tmp_name']['imagen'])
+        && is_string($archivoPropiedad['tmp_name']['imagen'])
+    ) {
+        $tmpImagen = $archivoPropiedad['tmp_name']['imagen'];
     }
 
-    // Guardar la imagen en el servidor
-    $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+    // Generar nombre unico
+    $manager = new Image(new Driver());
+    $nombreImagen = md5(uniqid('', true)) . '.jpg';
 
-    $propiedad->guardar();
-  }
+    if ($tmpImagen !== '') {
+        // Solo para Intervention Image v3
+        $imagen = $manager->read($tmpImagen)->cover(800, 600);
+        $propiedad->setImagen($nombreImagen);
+    }
+
+    $errores = $propiedad->validar();
+
+    if (empty($errores)) {
+        // *** SUBIDA DE ARCHIVOS ****
+        // Crear carpeta
+
+        if (!is_dir(CARPETA_IMAGENES)) {
+            mkdir(CARPETA_IMAGENES);
+        }
+
+        // Guardar la imagen en el servidor
+        if ($imagen !== null) {
+            $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+        }
+
+        $propiedad->guardar();
+    }
 }
 
 incluirTemplate('header');
@@ -54,9 +71,9 @@ incluirTemplate('header');
 <main class="contenedor seccion">
   <h1>Crear propiedad</h1>
   <a href="/admin" class="boton boton-verde">Volver</a>
-  <?php foreach ($errores as $error): ?>
+  <?php foreach ($errores as $error) : ?>
     <div class="alerta error">
-      <?php print($error) ?>
+        <?php print($error) ?>
     </div>
   <?php endforeach ?>
   <form class="formulario" method="POST" action="/admin/propiedades/crear.php" enctype="multipart/form-data">

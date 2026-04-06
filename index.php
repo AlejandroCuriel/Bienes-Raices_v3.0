@@ -28,9 +28,9 @@ incluirTemplate('header', true);
 <section class="seccion contenedor">
   <h2>Casas y Depas en Venta</h2>
 
-  <?php
-  include_once 'includes/templates/anuncios.php'
-  ?>
+    <?php
+        include_once 'includes/templates/anuncios.php'
+    ?>
 
   <div class="alinear-derecha">
     <a href="anuncios.php" class="boton-verde">Ver Todas</a>

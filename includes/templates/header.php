@@ -1,8 +1,9 @@
 <?php
 if (!isset($_SESSION)) {
-  session_start();
+    session_start();
 }
 $auth = $_SESSION['login'] ?? false;
+$inicio = isset($inicio) && is_bool($inicio) ? $inicio : false;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +35,7 @@ $auth = $_SESSION['login'] ?? false;
             <a href="/anuncios.php">Anuncios</a>
             <a href="/blog.php">Blog</a>
             <a href="/contacto.php">Contacto</a>
-            <?php if ($auth): ?>
+            <?php if ($auth) : ?>
               <a href="/cerrar-sesion.php">Cerrar Sesión</a>
 
             <?php endif ?>
@@ -43,6 +44,6 @@ $auth = $_SESSION['login'] ?? false;
 
       </div> <!--.barra-->
 
-      <?php echo $inicio ? "<h1>Venta de Casas y Departamentos Exclusivos de Lujo</h1>" : ''; ?>
+      <?php echo $inicio ? '<h1>Venta de Casas y Departamentos Exclusivos de Lujo</h1>' : ''; ?>
     </div>
   </header>

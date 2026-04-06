@@ -7,33 +7,41 @@ use App\Propiedad;
 use App\Vendedor;
 
 // Implementar un método para obtener todas las propiedades
+
+/** @var App\Propiedad[] $propiedades */
 $propiedades = Propiedad::all();
+/** @var App\Vendedor[] $vendedores */
 $vendedores = Vendedor::all();
 
 // Muestra mensaje condicional
 $resultado = $_GET['resultado'] ?? null;
+$resultado = is_int($resultado) || is_string($resultado) || is_null($resultado) ? $resultado : null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Validar id
-  $id = $_POST['id'];
-  $id = filter_var($id, FILTER_VALIDATE_INT);
+    // Validar id
+    $id = $_POST['id'];
+    $id = filter_var($id, FILTER_VALIDATE_INT);
 
-  if ($id) {
-
-    $tipo = $_POST['tipo'];
-    if (validarTipoContenido($tipo)) {
-      // Compara lo que vamos a eliminar dependiendo del tipo
-      if ($tipo === 'propiedad') {
-        // Obtener los datos de la propiedad
-        $propiedad = Propiedad::find($id);
-        $resultado = $propiedad->eliminar();
-      } elseif ($tipo === 'vendedor') {
-        // Obtener los datos del vendedor
-        $vendedor = Vendedor::find($id);
-        $resultado = $vendedor->eliminar();
-      }
+    if ($id) {
+        $tipo = $_POST['tipo'] ?? '';
+        $tipo = is_string($tipo) ? $tipo : '';
+        if (validarTipoContenido($tipo)) {
+            // Compara lo que vamos a eliminar dependiendo del tipo
+            if ($tipo === 'propiedad') {
+                // Obtener los datos de la propiedad
+                $propiedad = Propiedad::find($id);
+                if ($propiedad !== null) {
+                    $resultado = $propiedad->eliminar();
+                }
+            } elseif ($tipo === 'vendedor') {
+                // Obtener los datos del vendedor
+                $vendedor = Vendedor::find($id);
+                if ($vendedor !== null) {
+                    $resultado = $vendedor->eliminar();
+                }
+            }
+        }
     }
-  }
 }
 
 // Incluye un template
@@ -43,7 +51,8 @@ incluirTemplate('header');
 <main class="contenedor seccion">
 
   <h1>Administrador de Bienes Raices</h1>
-  <?php if ($mensaje = mostrarNotificacion($resultado)) : ?>
+  <?php $resultadoNotificacion = is_int($resultado) || is_string($resultado) || is_null($resultado) ? $resultado : null; ?>
+  <?php if ($mensaje = mostrarNotificacion($resultadoNotificacion)) : ?>
     <p class="alerta exito"><?= sanitizarHTML($mensaje) ?></p>
   <?php endif; ?>
 

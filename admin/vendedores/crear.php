@@ -8,39 +8,56 @@ use Intervention\Image\ImageManager as Image;
 
 estaAutenticado();
 
-$vendedor = new Vendedor;
+$vendedor = new Vendedor();
 
 // Array para los errores
 $errores = Vendedor::getErrores();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Crea una nueva instancia
-  $vendedor = new Vendedor($_POST['vendedor']);
-
-  // Generar nombre unico
-  $manager = new Image(new Driver());
-  $nombreImagen = md5(uniqid(rand(), true)) . '.jpg';
-
-  if ($_FILES['vendedor']['tmp_name']['imagen']) {
-    // Solo para Intervention Image v3
-    $imagen = $manager->read($_FILES['vendedor']['tmp_name']['imagen'])->cover(200, 200);
-    $vendedor->setImagen($nombreImagen);
-  }
-
-  $errores = $vendedor->validar();
-
-  if (empty($errores)) {
-    // *** SUBIDA DE ARCHIVOS ****
-    // Crear carpeta
-
-    if (!is_dir(CARPETA_IMAGENES_PERFIL)) {
-      mkdir(CARPETA_IMAGENES_PERFIL);
+    // Crea una nueva instancia
+    $args = $_POST['vendedor'] ?? [];
+    $args = is_array($args) ? $args : [];
+    /** @var array<string, mixed> $args */
+    $vendedor = new Vendedor($args);
+    $imagen = null;
+    $tmpImagen = '';
+    $archivoVendedor = $_FILES['vendedor'] ?? null;
+    if (
+        is_array($archivoVendedor)
+        && isset($archivoVendedor['tmp_name'])
+        && is_array($archivoVendedor['tmp_name'])
+        && isset($archivoVendedor['tmp_name']['imagen'])
+        && is_string($archivoVendedor['tmp_name']['imagen'])
+    ) {
+        $tmpImagen = $archivoVendedor['tmp_name']['imagen'];
     }
 
-    // Guardar la imagen en el servidor
-    $imagen->save(CARPETA_IMAGENES_PERFIL . $nombreImagen);
-    $vendedor->guardar();
-  }
+    // Generar nombre unico
+    $manager = new Image(new Driver());
+    $nombreImagen = md5(uniqid('', true)) . '.jpg';
+
+    if ($tmpImagen !== '') {
+        // Solo para Intervention Image v3
+        $imagen = $manager->read($tmpImagen)->cover(200, 200);
+        $vendedor->setImagen($nombreImagen);
+    }
+
+    $errores = $vendedor->validar();
+
+    if (empty($errores)) {
+        // *** SUBIDA DE ARCHIVOS ****
+        // Crear carpeta
+
+        if (!is_dir(CARPETA_IMAGENES_PERFIL)) {
+            mkdir(CARPETA_IMAGENES_PERFIL);
+        }
+
+        // Guardar la imagen en el servidor
+        if ($imagen !== null) {
+            $imagen->save(CARPETA_IMAGENES_PERFIL . $nombreImagen);
+        }
+        $vendedor->guardar();
+    }
 }
 
 incluirTemplate('header');
@@ -51,9 +68,9 @@ incluirTemplate('header');
 
   <a href="/admin" class="boton boton-verde">Volver</a>
 
-  <?php foreach ($errores as $error): ?>
+  <?php foreach ($errores as $error) : ?>
     <div class="alerta error">
-      <?php print($error) ?>
+        <?php print($error) ?>
     </div>
   <?php endforeach ?>
 
