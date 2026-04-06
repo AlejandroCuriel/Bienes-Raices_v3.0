@@ -23,7 +23,7 @@
     }
   ],
   "require": {
-    "intervention/image": "^3.11"
+    "intervention/image": "^4.0"
   },
   "autoload": {
     "psr-4": {
