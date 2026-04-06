@@ -5,3 +5,4 @@ imagenes_perfil
 .env
 
 /vendor/
+.php-cs-fixer.cache
