@@ -23,7 +23,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2" # Define tu versión de PHP
+          php-version: "8.3" # Define tu versión de PHP
           tools: phpstan
 
       - name: Validate composer.json
