@@ -3,9 +3,9 @@
 use App\Propiedad;
 
 if ($_SERVER['SCRIPT_NAME'] === '/anuncios.php') {
-  $propiedades = Propiedad::all();
+    $propiedades = Propiedad::all();
 } else {
-  $propiedades = Propiedad::get(3);
+    $propiedades = Propiedad::get(3);
 }
 
 ?>
