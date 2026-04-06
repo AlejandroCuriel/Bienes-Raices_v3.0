@@ -2,6 +2,7 @@
   "name": "alex/bienes-raices",
   "description": "Creando un proyecto con POO",
   "type": "project",
+  "license": "MIT",
   "scripts": {
     "lint": "phpcs",
     "lint:fix": "phpcbf",
