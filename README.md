@@ -16,6 +16,7 @@ Este repositorio combina:
 ## Stack Tecnico
 
 - PHP (con `mysqli`)
+- PHP GD (requerido por `intervention/image`)
 - MySQL 8.4
 - Composer (`intervention/image`)
 - Node.js 22 + pnpm 10
@@ -64,6 +65,43 @@ Este repositorio combina:
 
 ## Configuracion Rapida con Docker
 
+### Onboarding rapido para cualquier equipo
+
+1. Clonar el repositorio.
+2. Crear o revisar el archivo `.env`.
+3. Levantar todo con Docker:
+
+```bash
+docker compose up -d --build
+```
+
+1. Abrir la aplicacion y login:
+
+- Sitio: `http://localhost:8080`
+- Admin: `http://localhost:8080/login.php`
+- Usuario inicial: `correo@correo.com`
+- Password inicial: `123456`
+
+### Primer arranque
+
+Docker se encarga de:
+
+- levantar PHP + Apache
+- levantar MySQL
+- instalar dependencias PHP con Composer si faltan
+- levantar Node y compilar assets
+- crear las tablas base si la base de datos es nueva
+
+### Si algo falla por una base vieja
+
+```bash
+docker compose down
+docker volume rm bienesraices_db_data
+docker compose up -d --build
+```
+
+### Flujo manual detallado
+
 1. Crear variables de entorno desde el ejemplo:
 
 ```bash
@@ -86,6 +124,11 @@ Servicios definidos:
 - `web`: PHP 8.4 + Apache
 - `db`: MySQL 8.4
 - `node`: watcher de assets con `pnpm run dev`
+
+Nota para entorno Docker-only:
+
+- El contenedor `web` instala dependencias de Composer automaticamente si no existe `vendor/autoload.php`.
+- No necesitas tener PHP ni Composer instalados localmente para ejecutar el proyecto.
 
 ## Configuracion Manual (sin Docker)
 
@@ -134,14 +177,31 @@ Salida de assets:
 
 ## Base de Datos
 
-La conexion actual esta en `includes/config/database.php` y usa valores fijos:
+La conexion actual esta en `includes/config/database.php`.
 
-- host: `localhost`
-- user: `root`
-- pass: `root`
-- db: `bienesraices_crud`
+Orden de resolucion:
 
-Si usas Docker con `db` como contenedor, ajusta este archivo para usar host `db` o lee variables de entorno.
+- Variables `DB_*` para Docker (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`)
+- Variables `MYSQL_*` como fallback
+- Valores locales por defecto: `localhost`, `root`, `root`, `bienesraices_crud`
+
+Con Docker, el servicio `web` ya recibe estas variables desde `docker-compose.yml`.
+
+Esquema inicial para Docker:
+
+- Archivo: `db/init/001_schema.sql`
+- Incluye tablas `usuarios`, `vendedores` y `propiedades`
+- Inserta un usuario admin por defecto (`correo@correo.com` / `123456`)
+
+Importante: los scripts de `/docker-entrypoint-initdb.d` solo se ejecutan cuando el volumen de MySQL es nuevo.
+
+Si ya levantaste Docker antes y tu volumen no tiene tablas, reinicia solo datos de MySQL:
+
+```bash
+docker compose down
+docker volume rm bienesraices_db_data
+docker compose up -d --build
+```
 
 ## Usuario Admin
 
