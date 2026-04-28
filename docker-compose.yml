@@ -19,7 +19,7 @@ services:
       - ./:/var/www/html
 
   db:
-    image: mysql:9.6
+    image: mysql:9.7
     container_name: bienesraices-db
     restart: unless-stopped
     environment:
