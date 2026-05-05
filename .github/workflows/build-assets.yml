@@ -26,7 +26,7 @@ jobs:
 
       # ✅ PNPM PRIMERO
       - name: Install pnpm ${{ env.PNPM_VERSION }}
-        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 #v5 #5.0.0
+        uses: pnpm/action-setup@8912a9102ac27614460f54aedde9e1e7f9aec20d #v5 #6.0.5
         with:
           version: ${{ env.PNPM_VERSION }}
 
